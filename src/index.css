@@ -1,0 +1,14 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+/* Add this to your CSS file */
+
+::-webkit-scrollbar {
+    display: none;
+  }
+  html {
+    scroll-behavior:smooth;
+  }
+/* EmployeeDashBoard.css */
+
+

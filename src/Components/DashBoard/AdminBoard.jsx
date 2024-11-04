@@ -1,0 +1,184 @@
+import React, { useEffect, useState, useRef } from "react";
+import axios from "axios";
+import BookCard from "../Pages/Cards/Book";
+import { backend } from "../../App";
+import Modal from "../Pages/Cards/BookDetailAdmin";
+import { useNavigate } from "react-router-dom";
+import Transaction from "../Pages/UserPages/Transaction";
+import { useDispatch } from "react-redux";
+import { logOutUser, userLogout } from "../../actions/authActions";
+
+function AdminHomePage() {
+  const options = {
+    year: "numeric",
+    month: "long",
+    day: "numeric",
+    hour: "2-digit",
+    minute: "2-digit",
+    second: "2-digit",
+  };
+  let dispatch=useDispatch();
+  const [currentTime, setCurrentTime] = useState(
+    new Date().toLocaleString(undefined, options)
+  );
+  const [transactionButtonState, setTransactionButtonState] = useState({});
+  const [transactions, setTransactions] = useState([]); // Store all transactions
+  const [bookArray, setBooksArray] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [selectedBook, setSelectedBook] = useState(null);
+  const searchRef = useRef();
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    const fetchBooks = async () => {
+      try {
+        const response = await axios.get(`${backend}/books`);
+        setBooksArray(response.data);
+        setLoading(false);
+      } catch (error) {
+        console.error("Error fetching books:", error);
+      }
+    };
+
+    if (bookArray === null) fetchBooks();
+
+    const intervalRef = setInterval(() => {
+      // Update the clock every second
+      const newTime = new Date().toLocaleString(undefined, options);
+      // Instead of setting state here, we can just update the DOM directly
+      document.getElementById("current-time").innerText = newTime;
+    }, 1000);
+
+    return () => clearInterval(intervalRef);
+  }, [bookArray]); // Include bookArray in dependencies to prevent fetching again
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    try {
+      const search = searchRef.current.value;
+      const { data } = await axios.get(`${backend}/books`, {
+        params: { search: search },
+      });
+      setBooksArray(data);
+      setLoading(false);
+    } catch (error) {
+      console.log(error.message);
+    }
+  };
+
+  const handleSeeTransactions = async (bookName,bookId) => {
+    let response;
+    try {
+      if(!transactionButtonState[bookName]?.clicked){
+      response = await axios.get(`${backend}/transaction/${bookId}`, {
+        // Assuming your backend can filter by bookName
+      });
+      
+    }
+    let newTransactions = response?.data?.transactions;
+      setTransactions((prevTransactions) => {
+        // Filter out existing transactions for this bookName
+        const filteredTransactions = prevTransactions.filter((transaction) => 
+          transaction.bookName !== bookName
+        );
+        if(newTransactions)return [...filteredTransactions, ...newTransactions];
+        else return [...filteredTransactions]
+      });
+
+      // Update the button state to reflect the clicked status
+      setTransactionButtonState((prevState) => ({
+        ...prevState,
+        [bookName]: { loading: false, clicked: !prevState[bookName]?.clicked }, // Toggle clicked state
+      }));
+    } catch (error) {
+      console.error("Error fetching transactions:", error);
+    }
+  };
+
+  const handleBookClick = (book, e) => {
+    if (e.target.classList.contains("edit-button")) {
+      return; // Do nothing if it was an edit button click
+    }
+    setSelectedBook(book); // Set the selected book to show in the modal
+  };
+
+  const closeModal = () => {
+    setSelectedBook(null); // Close the modal
+  };
+
+  if (loading) {
+    return <div className="flex justify-center items-center h-screen w-screen">Loading...</div>;
+  }
+
+  return (
+    <div className="p-8 bg-gray-50">
+      <div className="flex justify-between items-center mb-6">
+        <h2 className="text-3xl font-bold">Admin Dashboard</h2>
+        <form className="w-full mx-6" onSubmit={handleSubmit}>
+          <input
+            type="text"
+            placeholder="Search"
+            ref={searchRef}
+            className="mt-1 block w-full p-2 border border-gray-600 rounded-lg"
+          />
+        </form>
+        <p className="text-gray-600" id="current-time">{currentTime}</p>
+      </div>
+      <div className="flex justify-between mb-4">
+        <h4 className="font-medium">
+          Welcome: <span className="font-bold">Bhoumik</span>
+        </h4>
+        <div className="flex gap-4">
+          <button 
+            className="bg-blue-500 text-white py-2 px-4 rounded hover:bg-green-600 transition" 
+            onClick={() => { navigate('upload-book'); }}
+          >
+            Upload New Book
+          </button>
+          <button 
+            className="bg-red-500 text-white py-2 px-4 rounded hover:bg-red-600 transition" 
+            onClick={() => { 
+              logOutUser(dispatch);
+              navigate('/login');
+             }}
+          >
+            Logout
+          </button>
+        </div>
+      </div>
+
+      <Modal book={selectedBook} onClose={closeModal} />
+
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+        {bookArray.map((book) => (
+          <div 
+            className="bg-white rounded shadow-md p-4 hover:shadow-lg transition flex flex-col justify-between" 
+            key={book._id} 
+            onClick={(e) => handleBookClick(book, e)}
+          >
+            <BookCard book={book} />
+            <button
+              className="edit-button bg-yellow-500 text-white py-2 px-2 rounded mt-2 w-full"
+              onClick={(e) => {
+                e.stopPropagation(); // Prevent event bubbling to the parent div
+                navigate(`/admin/update-book/${book._id}`);
+              }}
+            >
+              Edit
+            </button>
+            <button
+              className={`edit-button ${transactionButtonState[book.title]?.clicked ? "bg-green-500" : "bg-red-500"} text-white py-2 px-2 rounded mt-2 w-full`}
+              onClick={() => handleSeeTransactions(book.title, book._id)} // Pass bookName instead of bookId
+            >
+              {transactionButtonState[book.title]?.clicked ? "Transactions Loaded" : "See Transactions"}
+            </button>
+          </div>
+        ))}
+      </div>
+
+      <Transaction transactions={transactions} />
+    </div>
+  );
+}
+
+export default AdminHomePage;
