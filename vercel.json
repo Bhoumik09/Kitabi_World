@@ -1,11 +1,6 @@
 {
-    "redirects": [
-      {
-        "source": "/(.*)", 
-        "destination": "https://kitabi-world-tq1p.vercel.app",
-        "permanent": true
-      }
-    ],
-    "cleanUrls": true
-  }
-  
+  "rewrites": [
+    { "source": "/(.*)", "destination": "/index.html" }
+  ],
+  "cleanUrls": true
+}
