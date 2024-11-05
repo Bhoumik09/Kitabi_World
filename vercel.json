@@ -1,15 +1,6 @@
 {
-    "builds": [
-      {
-        "src": "package.json",
-        "use": "@vercel/static-build",
-        "config": {
-          "distDir": "dist" // Change to "build" if that's your output directory
-        }
-      }
-    ],
-    "routes": [
-      { "src": "/(.*)", "dest": "/index.html" }
+    "rewrites": [
+      { "source": "/(.*)", "destination": "/index.html" }
     ],
     "cleanUrls": true
   }
