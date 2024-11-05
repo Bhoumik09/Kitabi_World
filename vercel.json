@@ -2,18 +2,6 @@
     "rewrites": [
       { "source": "/(.*)", "destination": "/index.html" }
     ],
-    "cleanUrls": true,
-    "builds": [
-      {
-        "src": "package.json",
-        "use": "@vercel/static-build",
-        "config": {
-          "distDir": "dist" 
-        }
-      }
-    ],
-    "routes": [
-      { "src": "/(.*)", "dest": "/index.html" }
-    ]
+    "cleanUrls": true
   }
   
