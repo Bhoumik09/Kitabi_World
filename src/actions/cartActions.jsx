@@ -24,7 +24,6 @@ export const addToCart = (userId, bookId) => async (dispatch, getState) => {
   // Optionally sync with the backend
   try {
     let response=await axios.post(`${backend}/cart/add-to-cart`, { userId, bookId });
-    console.log(response);
   } catch (error) {
     dispatch(setError(error?.response?.data || "Failed to add item to cart"));
   }
@@ -37,15 +36,14 @@ export const deleteFromCart = (userId, bookId) => async (dispatch, getState) => 
 
   // Filter out the item to be removed
   const updatedItems = existingCartItems.filter((item) => item.bookId !== bookId);
-  console.log(existingCartItems);
-  console.log(updatedItems);
+  
   // Update Redux and localStorage
   dispatch(setCartItems(updatedItems));
   localStorage.setItem("cartItems", JSON.stringify(updatedItems));
   // Optionally sync with the backend
   try {
     let response=await axios.post(`${backend}/cart/delete-from-cart`, { userId, bookId });
-    console.log(response);
+    
   } catch (error) {
     dispatch(setError(error?.response?.data || "Failed to delete item from cart"));
   }

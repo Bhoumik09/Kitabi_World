@@ -8,7 +8,7 @@ function GenreCollection({ name ,assignData, image}) {
 
 
   let searchByGerne=async(name)=>{
-    let  data  = await axios.get(`${backend}/books`, {
+    let  data  = await axios.get(`${backend}/books/`, {
       params: {
         search:name,
       },

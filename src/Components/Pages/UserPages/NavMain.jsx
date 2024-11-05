@@ -30,7 +30,7 @@ function NavMain({ assignData }) {
         search=""
         return;
       }
-      let  data  = await axios.get(`${backend}/books`, {
+      let  data  = await axios.get(`${backend}/books/`, {
         params: {
           search: search,
         },

@@ -11,7 +11,6 @@ export const logOutUser=(dispatch)=>{
 }
 export const checkUserSession = () => async (dispatch) => {
   const token = Cookies.get('token'); // Get token from cookies
-  console.log(token)
   if (token==undefined) {
     
     dispatch(logout());
@@ -21,7 +20,6 @@ export const checkUserSession = () => async (dispatch) => {
     const response = await axios.get(`${backend}/auth/verify-token`, {
       headers: { Authorization: `Bearer ${token}` }
     });
-    console.log(response.data.user);
     // Dispatch login action with the user and token received from the backend
     dispatch(login({ user: response.data.user, token:response.data.token,id:response.data.user.id  }));
   } catch (error) {

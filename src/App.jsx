@@ -14,17 +14,18 @@ import SignUp from "./Components/Auth/SignUp";
 import MyOrders from "./Components/Pages/UserPages/MyOrders";
 import UpdateBookForm from "./Components/Forms/UpdateBookForm";
 
-export const backend = "http://localhost:5000";
+
+export const backend = import.meta.env.VITE_BACKEND_URL;
 
 function App() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   let auth=useSelector((state) => state.auth.isAuthenticated)
-  console.log("hrhr");
-  console.log(auth)
+  
+  
   // Get the entire user state1 q
   const isAdmin = null || useSelector((state) => state.auth.user?.is_admin);
-  console.log(isAdmin);
+  
   useEffect(()=>{
     
     if(Cookies.get('token')){
@@ -53,7 +54,7 @@ function App() {
 
   return (
     <Routes>
-      <Route path="/newBook" element={<CreateBookForm/>} />
+      <Route path="/admin/newBook" element={<CreateBookForm/>} />
       <Route path="/login" element={<Login />} />
       <Route path="/signup" element={<SignUp/>} />
       <Route path="/admin" element={<AdminHomePage/>}/>
