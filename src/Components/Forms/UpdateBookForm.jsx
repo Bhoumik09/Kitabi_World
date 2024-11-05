@@ -9,8 +9,8 @@ function UpdateBookForm() {
     description: "",
     price: "",
     genre: "",
-    tags: "",
-    authors: "",
+    tags: "", // Initialize as a string
+    authors: "", // Initialize as a string
     thumbnail: "",
     publisher: "",
     rating: "",
@@ -36,8 +36,8 @@ function UpdateBookForm() {
           description: book.description,
           price: book.price,
           genre: book.genre,
-          tags: book.tags.map((tag) => tag.name).join(','),
-          authors: book.authors.map((author) => author.name).join(','),
+          tags: book.tags.map(tag => tag.name).join(', '), // Join tags as a string
+          authors: book.authors.map(author => author.name).join(', '), // Join authors as a string
           thumbnail: book.thumbnail,
           publisher: book.publisher.name,
           rating: book.rating,
@@ -58,17 +58,27 @@ function UpdateBookForm() {
 
   const handleChange = (e) => {
     const { name, value } = e.target;
+
+    // Update authors and tags as strings
     setFormData((prevData) => ({
       ...prevData,
-      [name]: value
+      [name]: value // Set value directly as a string
     }));
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
 
+    // Split authors and tags back into arrays for submission
+    const authorsArray = formData.authors.split(',').map(item => item.trim());
+    const tagsArray = formData.tags.split(',').map(item => item.trim());
+
     try {
-      const response = await axios.put(`${backend}/books/update-book/${bookId}`, formData);
+      const response = await axios.put(`${backend}/books/update-book/${bookId}`, {
+        ...formData,
+        tags: tagsArray, // Convert back to array
+        authors: authorsArray // Convert back to array
+      });
       if (response.status === 200) {
         console.log("Book updated successfully");
         navigate('/admin');
@@ -140,7 +150,7 @@ function UpdateBookForm() {
             <input
               type="text"
               name="tags"
-              value={formData.tags}
+              value={formData.tags} // Display tags as a string
               onChange={handleChange}
               className="mt-1 block w-full p-2 border border-gray-300 rounded focus:bg-gradient-to-r from-blue-100 to-pink-100"
             />
@@ -150,7 +160,7 @@ function UpdateBookForm() {
             <input
               type="text"
               name="authors"
-              value={formData.authors}
+              value={formData.authors} // Display authors as a string
               onChange={handleChange}
               className="mt-1 block w-full p-2 border border-gray-300 rounded focus:bg-gradient-to-r from-blue-100 to-pink-100"
             />
@@ -223,7 +233,7 @@ function UpdateBookForm() {
           </div>
           <button
             type="submit"
-            className="w-full bg-blue-600 text-white py-2 rounded hover:bg-blue-700 transition duration-200"
+            className="w-full bg-blue-600 text-white py-2 rounded hover:bg-blue-700"
           >
             Update Book
           </button>
