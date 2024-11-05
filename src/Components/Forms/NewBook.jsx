@@ -122,7 +122,7 @@ function CreateBookForm() {
             />
           </div>
           <div className="mb-4">
-            <label className="block text-gray-700">Book Image Link</label>
+            <label className="block text-gray-700">Book PDF Link</label>
             <input
               type="text"
               ref={bookLinkRef}
