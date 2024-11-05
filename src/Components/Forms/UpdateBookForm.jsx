@@ -1,44 +1,50 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { backend } from "../../App";
 import { useNavigate, useParams } from "react-router-dom";
 
 function UpdateBookForm() {
-  const titleRef = useRef();
-  const descriptionRef = useRef();
-  const priceRef = useRef();
-  const genreRef = useRef();
-  const tagsRef = useRef();
-  const thumbnailRef = useRef();
-  const publisherRef = useRef();
-  const ratingRef = useRef();
-  const authorsRef = useRef();
-  const languageRef = useRef();
-  const pagesRef = useRef();
-  const bookLinkRef=useRef();
+  const [formData, setFormData] = useState({
+    title: "",
+    description: "",
+    price: "",
+    genre: "",
+    tags: "",
+    authors: "",
+    thumbnail: "",
+    publisher: "",
+    rating: "",
+    language: "",
+    pages: "",
+    book_link: ""
+  });
   const [loading, setLoading] = useState(true);
-  const {id:bookId}=useParams();
-  const navigate=useNavigate();
+  const { id: bookId } = useParams();
+  const navigate = useNavigate();
+
   // Fetch the book data when the component mounts
   useEffect(() => {
     const fetchBookData = async () => {
       try {
         const response = await axios.get(`${backend}/books/get-book/${bookId}`);
         const book = response.data;
-        
+        console.log(book); // Check if book data is correct
+
         // Populate the form fields with the existing book data
-        titleRef.current.value = book.title;
-        descriptionRef.current.value = book.description;
-        priceRef.current.value = book.price;
-        genreRef.current.value = book.genre;
-        tagsRef.current.value = book.tags.map((author)=>(author.name)).join(',');
-        authorsRef.current.value = book.authors.map((author)=>(author.name)).join(',');
-        thumbnailRef.current.value = book.thumbnail;
-        publisherRef.current.value = book.publisher.name;
-        ratingRef.current.value = book.rating;
-        languageRef.current.value = book.language.name;
-        pagesRef.current.value = book.pages;
-        bookLinkRef.current.value=book.book_link;
+        setFormData({
+          title: book.title,
+          description: book.description,
+          price: book.price,
+          genre: book.genre,
+          tags: book.tags.map((tag) => tag.name).join(','),
+          authors: book.authors.map((author) => author.name).join(','),
+          thumbnail: book.thumbnail,
+          publisher: book.publisher.name,
+          rating: book.rating,
+          language: book.language.name,
+          pages: book.pages,
+          book_link: book.book_link
+        });
 
         setLoading(false);
       } catch (error) {
@@ -50,26 +56,19 @@ function UpdateBookForm() {
     fetchBookData();
   }, [bookId]);
 
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setFormData((prevData) => ({
+      ...prevData,
+      [name]: value
+    }));
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    const bookData = {
-      title: titleRef.current.value.trim(),
-      description: descriptionRef.current.value.trim(),
-      price: priceRef.current.value,
-      genre: genreRef.current.value.trim(),
-      tags: tagsRef.current.value.split(",").map((tag) => tag.trim()),
-      authors: authorsRef.current.value.split(",").map((author) => author.trim()),
-      thumbnail: thumbnailRef.current.value,
-      publisher: publisherRef.current.value.trim(),
-      rating: ratingRef.current.value,
-      language: languageRef.current.value.trim(),
-      pages: parseInt(pagesRef.current.value),
-      book_link:bookLinkRef.current.value,
-    };
-
     try {
-      let response = await axios.put(`${backend}/books/update-book/${bookId}`, bookData);
+      const response = await axios.put(`${backend}/books/update-book/${bookId}`, formData);
       if (response.status === 200) {
         console.log("Book updated successfully");
         navigate('/admin');
@@ -96,7 +95,9 @@ function UpdateBookForm() {
             <label className="block text-gray-700">Title</label>
             <input
               type="text"
-              ref={titleRef}
+              name="title"
+              value={formData.title}
+              onChange={handleChange}
               required
               className="mt-1 block w-full p-2 border border-gray-300 rounded focus:bg-gradient-to-r from-blue-100 to-pink-100"
             />
@@ -104,7 +105,9 @@ function UpdateBookForm() {
           <div className="mb-4">
             <label className="block text-gray-700">Description</label>
             <textarea
-              ref={descriptionRef}
+              name="description"
+              value={formData.description}
+              onChange={handleChange}
               required
               rows="4"
               className="mt-1 block w-full p-2 border border-gray-300 rounded focus:bg-gradient-to-r from-blue-100 to-pink-100"
@@ -114,7 +117,9 @@ function UpdateBookForm() {
             <label className="block text-gray-700">Price</label>
             <input
               type="number"
-              ref={priceRef}
+              name="price"
+              value={formData.price}
+              onChange={handleChange}
               required
               className="mt-1 block w-full p-2 border border-gray-300 rounded focus:bg-gradient-to-r from-blue-100 to-pink-100"
             />
@@ -123,7 +128,9 @@ function UpdateBookForm() {
             <label className="block text-gray-700">Genre</label>
             <input
               type="text"
-              ref={genreRef}
+              name="genre"
+              value={formData.genre}
+              onChange={handleChange}
               required
               className="mt-1 block w-full p-2 border border-gray-300 rounded focus:bg-gradient-to-r from-blue-100 to-pink-100"
             />
@@ -132,7 +139,9 @@ function UpdateBookForm() {
             <label className="block text-gray-700">Tags (comma separated)</label>
             <input
               type="text"
-              ref={tagsRef}
+              name="tags"
+              value={formData.tags}
+              onChange={handleChange}
               className="mt-1 block w-full p-2 border border-gray-300 rounded focus:bg-gradient-to-r from-blue-100 to-pink-100"
             />
           </div>
@@ -140,7 +149,9 @@ function UpdateBookForm() {
             <label className="block text-gray-700">Authors (comma separated)</label>
             <input
               type="text"
-              ref={authorsRef}
+              name="authors"
+              value={formData.authors}
+              onChange={handleChange}
               className="mt-1 block w-full p-2 border border-gray-300 rounded focus:bg-gradient-to-r from-blue-100 to-pink-100"
             />
           </div>
@@ -148,7 +159,9 @@ function UpdateBookForm() {
             <label className="block text-gray-700">Thumbnail Image Link</label>
             <input
               type="text"
-              ref={thumbnailRef}
+              name="thumbnail"
+              value={formData.thumbnail}
+              onChange={handleChange}
               className="mt-1 block w-full p-2 border border-gray-300 rounded focus:bg-gradient-to-r from-blue-100 to-pink-100"
             />
           </div>
@@ -156,7 +169,9 @@ function UpdateBookForm() {
             <label className="block text-gray-700">Book PDF Link</label>
             <input
               type="text"
-              ref={bookLinkRef}
+              name="book_link"
+              value={formData.book_link}
+              onChange={handleChange}
               className="mt-1 block w-full p-2 border border-gray-300 rounded focus:bg-gradient-to-r from-blue-100 to-pink-100"
             />
           </div>
@@ -164,7 +179,9 @@ function UpdateBookForm() {
             <label className="block text-gray-700">Publisher</label>
             <input
               type="text"
-              ref={publisherRef}
+              name="publisher"
+              value={formData.publisher}
+              onChange={handleChange}
               required
               className="mt-1 block w-full p-2 border border-gray-300 rounded focus:bg-gradient-to-r from-blue-100 to-pink-100"
             />
@@ -173,7 +190,8 @@ function UpdateBookForm() {
             <label className="block text-gray-700">Rating (0 to 5)</label>
             <input
               type="number"
-              ref={ratingRef}
+              name="rating"
+              value={formData.rating}
               disabled
               min="0"
               max="5"
@@ -185,7 +203,9 @@ function UpdateBookForm() {
             <label className="block text-gray-700">Language</label>
             <input
               type="text"
-              ref={languageRef}
+              name="language"
+              value={formData.language}
+              onChange={handleChange}
               required
               className="mt-1 block w-full p-2 border border-gray-300 rounded focus:bg-gradient-to-r from-blue-100 to-pink-100"
             />
@@ -194,7 +214,9 @@ function UpdateBookForm() {
             <label className="block text-gray-700">Pages</label>
             <input
               type="number"
-              ref={pagesRef}
+              name="pages"
+              value={formData.pages}
+              onChange={handleChange}
               required
               className="mt-1 block w-full p-2 border border-gray-300 rounded focus:bg-gradient-to-r from-blue-100 to-pink-100"
             />
