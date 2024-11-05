@@ -9,11 +9,11 @@ import store from "./Store.jsx";
 import Item from "./Components/Pages/UserPages/Item.jsx";
 
 createRoot(document.getElementById("root")).render(
-  <StrictMode>
+  
     <Provider store={store}>
       <BrowserRouter>
        <App/>
       </BrowserRouter>
     </Provider>
-  </StrictMode>
+  
 );
