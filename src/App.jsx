@@ -15,7 +15,7 @@ import MyOrders from "./Components/Pages/UserPages/MyOrders";
 import UpdateBookForm from "./Components/Forms/UpdateBookForm";
 
 
-export const backend = "http://localhost:5000";
+export const backend = "https://kitabi-duniya-backend.vercel.app";
 
 function App() {
   const dispatch = useDispatch();
