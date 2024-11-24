@@ -25,7 +25,6 @@ function App() {
   let [isError, setNotificationErrorStatus]=useState();
    const  setNotificationMsg = (text,isError=false) => {
     setNotMsg(text);
-    console.log(isError)
     setNotificationErrorStatus(isError);
   };
 
