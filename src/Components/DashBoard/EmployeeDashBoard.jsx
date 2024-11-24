@@ -14,7 +14,7 @@ import Horror from "../../assets/Horror.jpg";
 import Mystery from "../../assets/Mystery.jpg";
 import Poetry from "../../assets/Poetry.webp";
 import Romance from "../../assets/Romance.avif";
-function EmployeeDashBoard() {
+function EmployeeDashBoard({notificationFunc}) {
   // Get the entire user state1 q
   const isAdmin = null || useSelector((state) => state.auth);
   console.log(useSelector((state) => state.purchase));
@@ -38,11 +38,11 @@ function EmployeeDashBoard() {
 
   return (
     <div className="flex bg-gray-100 h-screen flex-col overflow-x-scroll">
-      <NavMain assignData={assignData} />
+      <NavMain assignData={assignData} notificationFunc={notificationFunc}/>
 
       {dataArr !== null ? (
         // Render data if available
-        <SearchPageUser books={dataArr} />
+        <SearchPageUser books={dataArr} notificationFunc={notificationFunc} />
       ) : (
         // Default background section if data is null
         <div>

@@ -11,7 +11,7 @@ import { addToCart } from "../../actions/cartActions";
 import { setCartItems } from "../../Reducer/CartReducer";
 import { initailizaeCartItems, setPurchasedItems } from "../../Reducer/MyPurchaseReducer";
 
-function Login() {
+function Login({notificationFunc}) {
   const emailRef = useRef();
   const passwordRef = useRef();
   const dispatch = useDispatch();
@@ -25,14 +25,14 @@ function Login() {
     const password = passwordRef.current.value;
 
     try {
+      document.getElementById('login-button').classList.add('disabled')
       const response = await axios.post(
         `${backend}/auth/login`,
         { email, password },
         { withCredentials: true }
       );
-      
+      document
       if (response.status === 200) {
-        // console.log(response.data);
         const { token,transaction,cart} = response.data; // Make sure your backend sends user info
         // const cartResponse = await axios.post(`${backend}/cart/get-cart-items`, {
         //   userId:response.data.user.id,
@@ -47,14 +47,19 @@ function Login() {
         // localStorage.setItem("cartItems", JSON.stringify(cartResponse.data));
         dispatch(login({ user: response.data.user, token:response.data.token,id:response.data.user.id }));
         //  // Dispatch login action
-        console.log(bookCart)
           // Dispatch the action to check user session
           // dispatch(checkUserSession());
+        notificationFunc("Login SuccessFull");
+
         
       } else {
         console.log("User Login Failed");
+        document.getElementById('login-button').classList.remove('disabled')
+
       }
     } catch (error) {
+      notificationFunc("Email or Password is wrong",true);
+      document.getElementById('login-button').classList.remove('disabled')
       console.log("Error during login:", error?.message);
     }
   };
@@ -86,7 +91,7 @@ function Login() {
               required
             />
           </div>
-          <button type="submit" className="w-full bg-blue-500 text-white py-2 rounded hover:bg-blue-600 transition duration-200">Login</button>
+          <button type="submit"  id="login-button" className="w-full bg-blue-500 text-white py-2 rounded hover:bg-blue-600 transition duration-200">Login</button>
         </form>
         <p className="text-center">
           Don't have an account?{" "}

@@ -5,7 +5,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { logOutUser } from "../../../actions/authActions";
 import { useNavigate } from "react-router-dom";
 import logo from '../../../assets/Logo.jpg'
-function NavMain({ assignData }) {
+function NavMain({ assignData , notificationFunc}) {
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const searchRef = useRef();
   const dispatch=useDispatch();
@@ -21,6 +21,7 @@ function NavMain({ assignData }) {
   const logOutApp=()=>{
     logOutUser(dispatch);
     navigate('/login');
+    notificationFunc('User Logout Successfull')
   }
   const handleSubmit = async (e) => {
     e.preventDefault();

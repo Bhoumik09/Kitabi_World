@@ -6,7 +6,7 @@ import { addToCart, deleteFromCart } from "../../../actions/cartActions";
 import { useNavigate } from "react-router-dom";
 import Item from "./Item";
 
-function SearchPageUser({ books }) {
+function SearchPageUser({ books, notificationFunc }) {
   const [selectedGenres, setSelectedGenres] = useState([]);
   const [selectedRating, setSelectedRating] = useState(null);
   const [selectedLanguage, setSelectedLanguage] = useState(null);
@@ -14,7 +14,7 @@ function SearchPageUser({ books }) {
   const [selectedBook, setSelectedBook] = useState(null);
   const userId = useSelector((state) => state.auth.id);
   const [seeBookInfo, setSeeBookInfo] = useState(null);
-  
+
   const purchasedBooks = useSelector(
     (state) => state.purchase?.purchasedItems
   )?.map((items) => items.book._id);
@@ -42,7 +42,6 @@ function SearchPageUser({ books }) {
   ];
   const cartItems = useSelector((state) => state.cart.cartItems);
   const dispatch = useDispatch();
-  let navigate = useNavigate();
   const closeModal = () => {
     setSelectedBook(null);
   };
@@ -71,12 +70,10 @@ function SearchPageUser({ books }) {
         selectedGenres.length === 0 || selectedGenres.includes(book.genre);
       const matchesRating =
         selectedRating === null || book.rating === selectedRating;
-      
-  
-      return matchesGenre && matchesRating 
+
+      return matchesGenre && matchesRating;
     });
   };
-  
 
   const handleBookClick = (book) => {
     setSelectedBook(book);
@@ -85,8 +82,10 @@ function SearchPageUser({ books }) {
   const handleCartAction = (book) => {
     const isPresent = cartItems.some((item) => item.bookId === book._id);
     if (isPresent) {
+      notificationFunc("Item Deleted Successfully",true)
       dispatch(deleteFromCart(userId, book._id));
     } else {
+      notificationFunc("Item Added Successfully")
       dispatch(addToCart(userId, book._id));
     }
   };
@@ -153,8 +152,6 @@ function SearchPageUser({ books }) {
               ))}
             </div>
 
-            
-
             <h2 className="text-2xl font-bold text-purple-700 mb-4">GENRE</h2>
             <div className="space-y-2 overflow-y-scroll h-[20%]">
               {genres.map((genre) => (
@@ -205,7 +202,10 @@ function SearchPageUser({ books }) {
                         <>
                           <button
                             className="block w-full bg-blue-500 mt-4 rounded-lg font-semibold p-2"
-                            onClick={() => handleBookClick(book)}
+                            onClick={() => {
+                              handleBookClick(book);
+                              
+                            }}
                           >
                             Info
                           </button>
@@ -220,7 +220,7 @@ function SearchPageUser({ books }) {
                         </>
                       ) : (
                         <>
-                        <div className="flex-grow"></div>
+                          <div className="flex-grow"></div>
                           <button
                             onClick={() => {
                               setSeeBookInfo(book);

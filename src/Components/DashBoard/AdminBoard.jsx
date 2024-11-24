@@ -8,7 +8,7 @@ import Transaction from "../Pages/UserPages/Transaction";
 import { useDispatch } from "react-redux";
 import { logOutUser } from "../../actions/authActions";
 
-function AdminHomePage() {
+function AdminHomePage({notificationFunc}) {
   const options = {
     year: "numeric",
     month: "long",
@@ -131,6 +131,7 @@ function AdminHomePage() {
           <button
             className="bg-red-500 text-white py-2 px-4 rounded hover:bg-red-600 transition"
             onClick={() => {
+              notificationFunc("Logout SuccessFull");
               logOutUser(dispatch);
               navigate("/login");
             }}
