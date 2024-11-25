@@ -1,5 +1,5 @@
 // SignUp.js
-import React, { useRef } from "react";
+import React, { useRef, useState } from "react";
 import axios from "axios";
 import { backend } from "../../App";
 import {Link, useNavigate} from 'react-router-dom'
@@ -7,15 +7,16 @@ function SignUp({notificationFunc}){
   const usernameRef = useRef();
   const emailRef = useRef();
   const passwordRef = useRef();
+  const [button,setButtonState]=useState(false);
   let navigate=useNavigate()
   const handleSignUp = async (e) => {
     e.preventDefault();
     const username = usernameRef.current.value;
     const email = emailRef.current.value;
     const password = passwordRef.current.value;
+    setButtonState(true);
     try {
       // Handle signup logic here (e.g., send to backend)
-      document.getElementById('sign-up').classList.add('disabled')
       const response = await axios.post(
         `${backend}/auth/signup-user`,
         { username, email, password },
@@ -26,13 +27,12 @@ function SignUp({notificationFunc}){
         console.log("User Sign In Successfull");
         navigate('/login')
       } else {
-        document.getElementById('sign-up').classList.remove('disabled')
-
+        setButtonState(false);
         console.log("User SignUp Failed ");
       }
     } catch (error) {
-      notificationFunc("message Error");
-      document.getElementById('sign-up').classList.remove('disabled')
+      setButtonState(false);
+      notificationFunc("Username/Email already exixts", true);
       console.log("Error during signUp", error?.message);
     }
   };
@@ -93,7 +93,8 @@ function SignUp({notificationFunc}){
           <button
             type="submit"
             id="sign-up"
-            className="w-full bg-green-500 text-white py-2 rounded hover:bg-green-600 transition duration-200"
+            className="w-full bg-green-500 text-white py-2 rounded hover:bg-green-600 disabled:bg-green-400 transition duration-200"
+            disabled={button}
           >
             Sign Up
           </button>

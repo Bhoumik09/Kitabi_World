@@ -1,5 +1,5 @@
 // src/components/Auth/Login.jsx
-import React, { useRef, useEffect } from "react";
+import React, { useRef, useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
 import axios from 'axios';
 import { backend } from "../../App";
@@ -14,24 +14,21 @@ import { initailizaeCartItems, setPurchasedItems } from "../../Reducer/MyPurchas
 function Login({notificationFunc}) {
   const emailRef = useRef();
   const passwordRef = useRef();
+  const [button,setButtonState]=useState(false);
   const dispatch = useDispatch();
-  const navigate=useNavigate();
-
-  
-
   const handleLogin = async (e) => {
     e.preventDefault();
     const email = emailRef.current.value;
     const password = passwordRef.current.value;
-
+    setButtonState(true);
+    console.log('click')
     try {
-      document.getElementById('login-button').classList.add('disabled')
       const response = await axios.post(
         `${backend}/auth/login`,
         { email, password },
         { withCredentials: true }
       );
-      document
+      
       if (response.status === 200) {
         const { token,transaction,cart} = response.data; // Make sure your backend sends user info
         // const cartResponse = await axios.post(`${backend}/cart/get-cart-items`, {
@@ -54,12 +51,11 @@ function Login({notificationFunc}) {
         
       } else {
         console.log("User Login Failed");
-        document.getElementById('login-button').classList.remove('disabled')
-
+        setButtonState(false);
       }
     } catch (error) {
       notificationFunc("Email or Password is wrong",true);
-      document.getElementById('login-button').classList.remove('disabled')
+      setButtonState(false)
       console.log("Error during login:", error?.message);
     }
   };
@@ -91,7 +87,7 @@ function Login({notificationFunc}) {
               required
             />
           </div>
-          <button type="submit"  id="login-button" className="w-full bg-blue-500 text-white py-2 rounded hover:bg-blue-600 transition duration-200">Login</button>
+          <button type="submit"  id="login-button" className="w-full bg-blue-500 text-white py-2 rounded hover:bg-blue-600 transition duration-200  disabled:bg-blue-400" disabled={button}>Login</button>
         </form>
         <p className="text-center">
           Don't have an account?{" "}
