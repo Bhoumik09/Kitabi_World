@@ -31,6 +31,7 @@ function SignUp({ notificationFunc }) {
         console.log("User SignUp Failed ");
       }
     } catch (error) {
+      console.log('error');
       setButtonState(false);
       notificationFunc("Username/Email already exixts", true);
       console.log("Error during signUp", error?.message);
