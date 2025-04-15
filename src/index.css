@@ -4,11 +4,9 @@
 /* Add this to your CSS file */
 
 ::-webkit-scrollbar {
-    display: none;
-  }
-  html {
-    scroll-behavior:smooth;
-  }
+  display: none;
+}
+html {
+  scroll-behavior: smooth;
+}
 /* EmployeeDashBoard.css */
-
-

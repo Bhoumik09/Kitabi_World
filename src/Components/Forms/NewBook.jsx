@@ -14,8 +14,8 @@ function CreateBookForm() {
   const authorsRef = useRef();
   const languageRef = useRef();
   const pagesRef = useRef();
-  const bookLinkRef=useRef();
-  const navigate=useNavigate();
+  const bookLinkRef = useRef();
+  const navigate = useNavigate();
   const handleSubmit = async (e) => {
     e.preventDefault();
 
@@ -33,14 +33,14 @@ function CreateBookForm() {
       rating: ratingRef.current.value,
       language: languageRef.current.value.trim(), // Added language
       pages: parseInt(pagesRef.current.value), // Add
-      book_link:bookLinkRef.current.value.trim(),
+      book_link: bookLinkRef.current.value.trim(),
     };
 
     try {
-      let response = await axios.post(`${backend}/books/add-book`,bookData);
+      let response = await axios.post(`${backend}/books/add-book`, bookData);
       if (response.status == 200) {
         console.log("Book added sucessfully");
-        navigate('/admin');
+        navigate("/admin");
       } else {
         console.log("Failed to add the Book", response);
       }

@@ -8,7 +8,7 @@ import Transaction from "../Pages/UserPages/Transaction";
 import { useDispatch } from "react-redux";
 import { logOutUser } from "../../actions/authActions";
 
-function AdminHomePage({notificationFunc}) {
+function AdminHomePage({ notificationFunc }) {
   const options = {
     year: "numeric",
     month: "long",
@@ -31,7 +31,9 @@ function AdminHomePage({notificationFunc}) {
   useEffect(() => {
     const fetchBooks = async () => {
       try {
-        const response = await axios.get(`${backend}/books/`,{ withCredentials: true});
+        const response = await axios.get(`${backend}/books/`, {
+          withCredentials: true,
+        });
         setBooksArray(response.data);
         setLoading(false);
       } catch (error) {
@@ -74,9 +76,11 @@ function AdminHomePage({notificationFunc}) {
       let newTransactions = response?.data?.transactions;
       setTransactions((prevTransactions) => {
         const filteredTransactions = prevTransactions.filter(
-          (transaction) => transaction.bookName !== bookName
+          (transaction) => transaction.bookName !== bookName,
         );
-        return newTransactions ? [...filteredTransactions, ...newTransactions] : [...filteredTransactions];
+        return newTransactions
+          ? [...filteredTransactions, ...newTransactions]
+          : [...filteredTransactions];
       });
 
       setTransactionButtonState((prevState) => ({
@@ -100,7 +104,11 @@ function AdminHomePage({notificationFunc}) {
   };
 
   if (loading) {
-    return <div className="flex justify-center items-center h-screen w-screen">Loading...</div>;
+    return (
+      <div className="flex justify-center items-center h-screen w-screen">
+        Loading...
+      </div>
+    );
   }
 
   return (
@@ -115,7 +123,9 @@ function AdminHomePage({notificationFunc}) {
             className="mt-1 block w-full p-2 border border-gray-600 rounded-lg"
           />
         </form>
-        <p className="text-gray-600" ref={currentTimeRef}>{new Date().toLocaleString(undefined, options)}</p>
+        <p className="text-gray-600" ref={currentTimeRef}>
+          {new Date().toLocaleString(undefined, options)}
+        </p>
       </div>
       <div className="flex justify-between mb-4">
         <h4 className="font-medium">
@@ -164,7 +174,9 @@ function AdminHomePage({notificationFunc}) {
               className={`edit-button ${transactionButtonState[book.title]?.clicked ? "bg-green-500" : "bg-red-500"} text-white py-2 px-2 rounded mt-2 w-full`}
               onClick={() => handleSeeTransactions(book.title, book._id)}
             >
-              {transactionButtonState[book.title]?.clicked ? "Transactions Loaded" : "See Transactions"}
+              {transactionButtonState[book.title]?.clicked
+                ? "Transactions Loaded"
+                : "See Transactions"}
             </button>
           </div>
         ))}

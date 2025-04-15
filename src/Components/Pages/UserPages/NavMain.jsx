@@ -1,37 +1,34 @@
 import React, { useEffect, useRef, useState } from "react";
-import axios from 'axios'
+import axios from "axios";
 import { backend } from "../../../App";
 import { useDispatch, useSelector } from "react-redux";
 import { logOutUser } from "../../../actions/authActions";
 import { useNavigate } from "react-router-dom";
-import logo from '../../../assets/Logo.jpg'
-function NavMain({ assignData , notificationFunc}) {
+import logo from "../../../assets/Logo.jpg";
+function NavMain({ assignData, notificationFunc }) {
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const searchRef = useRef();
-  const dispatch=useDispatch();
-  let navigate=useNavigate();
-  const openCartFunc=()=>{
-    navigate('/user/cart');
-  }
-  const username=useSelector((state)=>state.auth.user?.username);
-  
- 
-  
-  
-  const logOutApp=()=>{
+  const dispatch = useDispatch();
+  let navigate = useNavigate();
+  const openCartFunc = () => {
+    navigate("/user/cart");
+  };
+  const username = useSelector((state) => state.auth.user?.username);
+
+  const logOutApp = () => {
     logOutUser(dispatch);
-    navigate('/login');
-    notificationFunc('User Logout Successfull')
-  }
+    navigate("/login");
+    notificationFunc("User Logout Successfull");
+  };
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
       let search = searchRef.current.value;
-      if(search===null){
-        search=""
+      if (search === null) {
+        search = "";
         return;
       }
-      let  data  = await axios.get(`${backend}/books/`, {
+      let data = await axios.get(`${backend}/books/`, {
         params: {
           search: search,
         },
@@ -47,7 +44,7 @@ function NavMain({ assignData , notificationFunc}) {
   };
   return (
     <nav className="flex h-full  bg-pink-800 w-screen  justify-between  px-14 p-4 items-center">
-      <img src={`${logo}`} alt="Logo" className="h-14 rounded-2xl"/>
+      <img src={`${logo}`} alt="Logo" className="h-14 rounded-2xl" />
       <form
         className="flex items-center bg-white px-3 rounded-xl"
         onSubmit={handleSubmit}
@@ -69,7 +66,9 @@ function NavMain({ assignData , notificationFunc}) {
       </form>
       <div className="relative">
         <div className="flex items-center gap-2" onClick={toggleDropdown}>
-          <span className="cursor-pointer font-bold text-white text-xl">{username}</span>
+          <span className="cursor-pointer font-bold text-white text-xl">
+            {username}
+          </span>
           <svg
             className={`h-4 transition duration-150 invert ${
               dropdownOpen ? "rotate-180" : ""
@@ -83,11 +82,26 @@ function NavMain({ assignData , notificationFunc}) {
         {dropdownOpen && (
           <div className="absolute w-28 bg-white shadow-md rounded mt-2 p-2 z-20 ">
             <ul>
-              <li className="hover:bg-gray-200 p-2 cursor-pointer z-2" onClick={()=>{navigate('/user/purchase-history')}}>
+              <li
+                className="hover:bg-gray-200 p-2 cursor-pointer z-2"
+                onClick={() => {
+                  navigate("/user/purchase-history");
+                }}
+              >
                 My Transactions
               </li>
-              <li className="hover:bg-gray-200 p-2 cursor-pointer" onClick={openCartFunc}>Cart</li>
-              <li className="hover:bg-gray-200 p-2 cursor-pointer" onClick={logOutApp}>Logout</li>
+              <li
+                className="hover:bg-gray-200 p-2 cursor-pointer"
+                onClick={openCartFunc}
+              >
+                Cart
+              </li>
+              <li
+                className="hover:bg-gray-200 p-2 cursor-pointer"
+                onClick={logOutApp}
+              >
+                Logout
+              </li>
             </ul>
           </div>
         )}

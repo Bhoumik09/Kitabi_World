@@ -16,7 +16,7 @@ function UpdateBookForm() {
     rating: "",
     language: "",
     pages: "",
-    book_link: ""
+    book_link: "",
   });
   const [loading, setLoading] = useState(true);
   const { id: bookId } = useParams();
@@ -36,14 +36,14 @@ function UpdateBookForm() {
           description: book.description,
           price: book.price,
           genre: book.genre,
-          tags: book.tags.map(tag => tag.name).join(', '), // Join tags as a string
-          authors: book.authors.map(author => author.name).join(', '), // Join authors as a string
+          tags: book.tags.map((tag) => tag.name).join(", "), // Join tags as a string
+          authors: book.authors.map((author) => author.name).join(", "), // Join authors as a string
           thumbnail: book.thumbnail,
           publisher: book.publisher.name,
           rating: book.rating,
           language: book.language.name,
           pages: book.pages,
-          book_link: book.book_link
+          book_link: book.book_link,
         });
 
         setLoading(false);
@@ -62,7 +62,7 @@ function UpdateBookForm() {
     // Update authors and tags as strings
     setFormData((prevData) => ({
       ...prevData,
-      [name]: value // Set value directly as a string
+      [name]: value, // Set value directly as a string
     }));
   };
 
@@ -70,18 +70,21 @@ function UpdateBookForm() {
     e.preventDefault();
 
     // Split authors and tags back into arrays for submission
-    const authorsArray = formData.authors.split(',').map(item => item.trim());
-    const tagsArray = formData.tags.split(',').map(item => item.trim());
+    const authorsArray = formData.authors.split(",").map((item) => item.trim());
+    const tagsArray = formData.tags.split(",").map((item) => item.trim());
 
     try {
-      const response = await axios.put(`${backend}/books/update-book/${bookId}`, {
-        ...formData,
-        tags: tagsArray, // Convert back to array
-        authors: authorsArray // Convert back to array
-      });
+      const response = await axios.put(
+        `${backend}/books/update-book/${bookId}`,
+        {
+          ...formData,
+          tags: tagsArray, // Convert back to array
+          authors: authorsArray, // Convert back to array
+        },
+      );
       if (response.status === 200) {
         console.log("Book updated successfully");
-        navigate('/admin');
+        navigate("/admin");
       } else {
         console.log("Failed to update the Book", response);
       }
@@ -146,7 +149,9 @@ function UpdateBookForm() {
             />
           </div>
           <div className="mb-4">
-            <label className="block text-gray-700">Tags (comma separated)</label>
+            <label className="block text-gray-700">
+              Tags (comma separated)
+            </label>
             <input
               type="text"
               name="tags"
@@ -156,7 +161,9 @@ function UpdateBookForm() {
             />
           </div>
           <div className="mb-4">
-            <label className="block text-gray-700">Authors (comma separated)</label>
+            <label className="block text-gray-700">
+              Authors (comma separated)
+            </label>
             <input
               type="text"
               name="authors"

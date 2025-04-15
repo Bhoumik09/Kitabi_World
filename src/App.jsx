@@ -14,16 +14,14 @@ import SignUp from "./Components/Auth/SignUp";
 import MyOrders from "./Components/Pages/UserPages/MyOrders";
 import UpdateBookForm from "./Components/Forms/UpdateBookForm";
 import Notification from "./Components/Pages/Cards/Notification";
-
 export const backend = "https://kitabi-duniya-backend.vercel.app";
-
 function App() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   let auth = useSelector((state) => state.auth.isAuthenticated);
   let [navMsg, setNotMsg] = useState("");
-  let [isError, setNotificationErrorStatus]=useState();
-   const  setNotificationMsg = (text,isError=false) => {
+  let [isError, setNotificationErrorStatus] = useState();
+  const setNotificationMsg = (text, isError = false) => {
     setNotMsg(text);
     setNotificationErrorStatus(isError);
   };
@@ -55,20 +53,49 @@ function App() {
 
   return (
     <>
-      <Notification text={navMsg} setOpen={navMsg.length>0 && true } notificationFunc={setNotificationMsg} isError={isError}  />
+      <Notification
+        text={navMsg}
+        setOpen={navMsg.length > 0 && true}
+        notificationFunc={setNotificationMsg}
+        isError={isError}
+      />
       <Routes>
         <Route
           path="/admin/newBook"
-          element={<CreateBookForm notificationFunc={setNotificationMsg}   />}
+          element={<CreateBookForm notificationFunc={setNotificationMsg} />}
         />
-        <Route path="/login" element={<Login notificationFunc={setNotificationMsg}/>} />
-        <Route path="/signup" element={<SignUp notificationFunc={setNotificationMsg} />} />
-        <Route path="/admin" element={<AdminHomePage  notificationFunc={setNotificationMsg}/>} />
-        <Route path="/admin/upload-book" element={<CreateBookForm notificationFunc={setNotificationMsg} />} />
-        <Route path="/admin/update-book/:id" element={<UpdateBookForm notificationFunc={setNotificationMsg} />} />
-        <Route path="/user/cart" element={<CartPage notificationFunc={setNotificationMsg}/>} />
-        <Route path="/user" element={<EmployeeDashBoard notificationFunc={setNotificationMsg}/>} />
-        <Route path="/user/purchase-history" element={<MyOrders notificationFunc={setNotificationMsg}/>} />
+        <Route
+          path="/login"
+          element={<Login notificationFunc={setNotificationMsg} />}
+        />
+        <Route
+          path="/signup"
+          element={<SignUp notificationFunc={setNotificationMsg} />}
+        />
+        <Route
+          path="/admin"
+          element={<AdminHomePage notificationFunc={setNotificationMsg} />}
+        />
+        <Route
+          path="/admin/upload-book"
+          element={<CreateBookForm notificationFunc={setNotificationMsg} />}
+        />
+        <Route
+          path="/admin/update-book/:id"
+          element={<UpdateBookForm notificationFunc={setNotificationMsg} />}
+        />
+        <Route
+          path="/user/cart"
+          element={<CartPage notificationFunc={setNotificationMsg} />}
+        />
+        <Route
+          path="/user"
+          element={<EmployeeDashBoard notificationFunc={setNotificationMsg} />}
+        />
+        <Route
+          path="/user/purchase-history"
+          element={<MyOrders notificationFunc={setNotificationMsg} />}
+        />
       </Routes>
     </>
   );

@@ -16,7 +16,7 @@ function SearchPageUser({ books, notificationFunc }) {
   const [seeBookInfo, setSeeBookInfo] = useState(null);
 
   const purchasedBooks = useSelector(
-    (state) => state.purchase?.purchasedItems
+    (state) => state.purchase?.purchasedItems,
   )?.map((items) => items.book._id);
   const genres = [
     "Fiction",
@@ -52,7 +52,7 @@ function SearchPageUser({ books, notificationFunc }) {
     setSelectedGenres((prevSelected) =>
       prevSelected.includes(genre)
         ? prevSelected.filter((g) => g !== genre)
-        : [...prevSelected, genre]
+        : [...prevSelected, genre],
     );
   };
 
@@ -82,10 +82,10 @@ function SearchPageUser({ books, notificationFunc }) {
   const handleCartAction = (book) => {
     const isPresent = cartItems.some((item) => item.bookId === book._id);
     if (isPresent) {
-      notificationFunc("Item Deleted Successfully",true)
+      notificationFunc("Item Deleted Successfully", true);
       dispatch(deleteFromCart(userId, book._id));
     } else {
-      notificationFunc("Item Added Successfully")
+      notificationFunc("Item Added Successfully");
       dispatch(addToCart(userId, book._id));
     }
   };
@@ -187,7 +187,7 @@ function SearchPageUser({ books, notificationFunc }) {
               {booksToDisplay.length > 0 ? (
                 booksToDisplay.map((book) => {
                   const isPresent = cartItems.some(
-                    (item) => item.bookId === book._id
+                    (item) => item.bookId === book._id,
                   );
                   return (
                     <div
@@ -204,7 +204,6 @@ function SearchPageUser({ books, notificationFunc }) {
                             className="block w-full bg-blue-500 mt-4 rounded-lg font-semibold p-2"
                             onClick={() => {
                               handleBookClick(book);
-                              
                             }}
                           >
                             Info

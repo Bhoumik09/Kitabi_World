@@ -1,29 +1,27 @@
-import axios from 'axios';
-import React from 'react';
-import { backend } from '../../../App';
+import axios from "axios";
+import React from "react";
+import { backend } from "../../../App";
 
-function GenreCollection({ name ,assignData, image}) {
-  
-
-
-
-  let searchByGerne=async(name)=>{
-    let  data  = await axios.get(`${backend}/books/`, {
+function GenreCollection({ name, assignData, image }) {
+  let searchByGerne = async (name) => {
+    let data = await axios.get(`${backend}/books/`, {
       params: {
-        search:name,
+        search: name,
       },
     });
     assignData(data);
-  }
-  
+  };
+
   return (
-    <div onClick={()=>searchByGerne(name)} className="relative border-white border-4 w-1/3 lg:w-1/4 xl:2-1/5  h-52 shadow-lg transition-all hover:scale-[102%] rounded-3xl overflow-hidden">
+    <div
+      onClick={() => searchByGerne(name)}
+      className="relative border-white border-4 w-1/3 lg:w-1/4 xl:2-1/5  h-52 shadow-lg transition-all hover:scale-[102%] rounded-3xl overflow-hidden"
+    >
       {/* Background Image */}
       <div
         className="absolute inset-0 bg-contain bg-center rounded-3xl"
         style={{
-          backgroundImage: `url(${image})`
-
+          backgroundImage: `url(${image})`,
         }}
       ></div>
 

@@ -5,8 +5,10 @@ import { backend } from "../../../App";
 
 function Item({ book }) {
   // Retrieve the transaction ID from Redux based on the book ID
-  const transactionId = useSelector((state) =>
-    state.purchase.purchasedItems.find((item) => item.book._id === book._id)?._id
+  const transactionId = useSelector(
+    (state) =>
+      state.purchase.purchasedItems.find((item) => item.book._id === book._id)
+        ?._id,
   );
 
   // State variables to manage user rating, average rating, and rating count
@@ -21,7 +23,9 @@ function Item({ book }) {
     const fetchRatingData = async () => {
       try {
         if (transactionId) {
-          const response = await axios.get(`${backend}/books/transactions/${transactionId}/rating`);
+          const response = await axios.get(
+            `${backend}/books/transactions/${transactionId}/rating`,
+          );
           const { userRating, averageRating, ratingsCount } = response.data;
 
           // Set rating data from the backend response
@@ -45,14 +49,21 @@ function Item({ book }) {
   };
 
   // Calculate average rating
-  const averageRating = ratingsCount ? (totalRatings / ratingsCount).toFixed(2) : 0;
+  const averageRating = ratingsCount
+    ? (totalRatings / ratingsCount).toFixed(2)
+    : 0;
 
   // Function to submit the user rating
   const submitRating = async (transactionId, rating) => {
     try {
-      const response = await axios.post(`${backend}/books/rate-book/${transactionId}`, { rating });
+      const response = await axios.post(
+        `${backend}/books/rate-book/${transactionId}`,
+        { rating },
+      );
       if (response.status === 200) {
-        setSuccess(`Rating submitted successfully. New average: ${response.data.averageRating}`);
+        setSuccess(
+          `Rating submitted successfully. New average: ${response.data.averageRating}`,
+        );
         setError(null); // Clear previous errors
         // console.log(response)
         // Update total ratings and count based on the new average rating
@@ -69,7 +80,11 @@ function Item({ book }) {
   return (
     <div className="h-screen">
       <div className="grid md:grid-cols-2 sm:grid-cols-1 h-full">
-        <div id="pImage" className="grid" style={{ gridTemplateRows: "2fr 1fr" }}>
+        <div
+          id="pImage"
+          className="grid"
+          style={{ gridTemplateRows: "2fr 1fr" }}
+        >
           <img
             className="rounded-lg lg:scale-125 md:scale-110 shadow-xl m-auto"
             src={book?.thumbnail}
@@ -77,7 +92,10 @@ function Item({ book }) {
           />
           <div className="flex justify-center items-start">
             {book?.tags?.map((tag, index) => (
-              <span key={index} className="py-2 px-5 font-bold m-2 bg-blue-400 rounded-lg shadow-2xl shadow-gray-500">
+              <span
+                key={index}
+                className="py-2 px-5 font-bold m-2 bg-blue-400 rounded-lg shadow-2xl shadow-gray-500"
+              >
                 {tag.name}
               </span>
             ))}
@@ -87,7 +105,9 @@ function Item({ book }) {
           <div className="font-extrabold lg:text-8xl md:text-6xl sm:text-8xl mb-6 text-center">
             {book?.title}
           </div>
-          <section className="mb-3 text-xl max-h-[200px] overflow-y-scroll">{book.description}</section>
+          <section className="mb-3 text-xl max-h-[200px] overflow-y-scroll">
+            {book.description}
+          </section>
           <section className="mb-3 text-2xl font-serif">
             <strong>BookLink: </strong>
             <a href={book?.book_link}>{book?.title}</a>
@@ -96,7 +116,8 @@ function Item({ book }) {
             <strong>Publisher:</strong> {book?.publisher?.name}
           </section>
           <section className="mb-3 text-2xl">
-            <strong>Author:</strong> {book?.authors?.map((author) => author.name).join(", ")}
+            <strong>Author:</strong>{" "}
+            {book?.authors?.map((author) => author.name).join(", ")}
           </section>
 
           {/* Rating Section */}

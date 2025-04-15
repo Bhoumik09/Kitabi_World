@@ -23,31 +23,41 @@ export const addToCart = (userId, bookId) => async (dispatch, getState) => {
 
   // Optionally sync with the backend
   try {
-    let response=await axios.post(`${backend}/cart/add-to-cart`, { userId, bookId });
+    let response = await axios.post(`${backend}/cart/add-to-cart`, {
+      userId,
+      bookId,
+    });
   } catch (error) {
     dispatch(setError(error?.response?.data || "Failed to add item to cart"));
   }
 };
 
 // Action to remove a book from the cart
-export const deleteFromCart = (userId, bookId) => async (dispatch, getState) => {
-  // Retrieve the current cart items from the Redux store
-  const existingCartItems = getState().cart.cartItems;
+export const deleteFromCart =
+  (userId, bookId) => async (dispatch, getState) => {
+    // Retrieve the current cart items from the Redux store
+    const existingCartItems = getState().cart.cartItems;
 
-  // Filter out the item to be removed
-  const updatedItems = existingCartItems.filter((item) => item.bookId !== bookId);
-  
-  // Update Redux and localStorage
-  dispatch(setCartItems(updatedItems));
-  localStorage.setItem("cartItems", JSON.stringify(updatedItems));
-  // Optionally sync with the backend
-  try {
-    let response=await axios.post(`${backend}/cart/delete-from-cart`, { userId, bookId });
-    
-  } catch (error) {
-    dispatch(setError(error?.response?.data || "Failed to delete item from cart"));
-  }
-};
+    // Filter out the item to be removed
+    const updatedItems = existingCartItems.filter(
+      (item) => item.bookId !== bookId,
+    );
+
+    // Update Redux and localStorage
+    dispatch(setCartItems(updatedItems));
+    localStorage.setItem("cartItems", JSON.stringify(updatedItems));
+    // Optionally sync with the backend
+    try {
+      let response = await axios.post(`${backend}/cart/delete-from-cart`, {
+        userId,
+        bookId,
+      });
+    } catch (error) {
+      dispatch(
+        setError(error?.response?.data || "Failed to delete item from cart"),
+      );
+    }
+  };
 
 // Action to synchronize local cart items with the backend
 export const syncCartWithBackend = (userId) => async (dispatch) => {
@@ -60,10 +70,12 @@ export const syncCartWithBackend = (userId) => async (dispatch) => {
       userId,
       items: localCartItems,
     });
-    
+
     // Update the Redux store with the backend-synced cart items
     dispatch(setCartItems(response.data.cartItems));
   } catch (error) {
-    dispatch(setError(error?.response?.data || "Failed to sync cart with backend"));
+    dispatch(
+      setError(error?.response?.data || "Failed to sync cart with backend"),
+    );
   }
 };

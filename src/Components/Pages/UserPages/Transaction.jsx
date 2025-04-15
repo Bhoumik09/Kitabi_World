@@ -15,7 +15,7 @@ function Transaction({ selectedBook, transactions }) {
     try {
       if (transactionArr.length === 0) {
         let response = await axios.get(
-          `${backend}/transaction/all-transactions`
+          `${backend}/transaction/all-transactions`,
         );
         if (response.status === 200) {
           console.log("Fetched Transaction Successfully");
@@ -55,12 +55,11 @@ function Transaction({ selectedBook, transactions }) {
             <span
               className="bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-600 transition "
               onClick={getAllTransaction}
-            >Books Data</span>
-          ) : (
-            <button
-              className=" mt-2 font-extrabold text-xl cursor-not-allowed text-black py-2 px-4 rounded"
-             
             >
+              Books Data
+            </span>
+          ) : (
+            <button className=" mt-2 font-extrabold text-xl cursor-not-allowed text-black py-2 px-4 rounded">
               No Books Seleted
             </button>
           )}

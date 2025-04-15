@@ -12,33 +12,32 @@ const CartPage = () => {
   const [books, setBooks] = useState(null);
   const [price, setPrice] = useState(0);
   let userId = useSelector((state) => state.auth.id);
-  const handleCheckout = async() => {
-    try{
-        let response=await axios.post(`${backend}/transaction/checkout`,{cartItems,userId});
-        // console.log(response.data);
-        if(response.status===200){
-            
-            for(let item of cartItems){
-              // console.log(item)
-              // console.log(item)
-              dispatch(deleteFromCart(item.userId,item.bookId));
-            }
-            // console.log(response.data);
-            dispatch(clearCart());
-            dispatch(setPurchasedItems(response.data));
-            alert('Transaction SuccessFull');
-
-        }else{
-            alert('Transaction unSuccessFull');
+  const handleCheckout = async () => {
+    try {
+      let response = await axios.post(`${backend}/transaction/checkout`, {
+        cartItems,
+        userId,
+      });
+      // console.log(response.data);
+      if (response.status === 200) {
+        for (let item of cartItems) {
+          // console.log(item)
+          // console.log(item)
+          dispatch(deleteFromCart(item.userId, item.bookId));
         }
-    }
-    catch(e){
-        console.log('Error in Transaction',e.message);
+        // console.log(response.data);
+        dispatch(clearCart());
+        dispatch(setPurchasedItems(response.data));
+        alert("Transaction SuccessFull");
+      } else {
+        alert("Transaction unSuccessFull");
+      }
+    } catch (e) {
+      console.log("Error in Transaction", e.message);
     }
   };
   // Fetch book details based on cart items
   useEffect(() => {
-    
     const fetchBooks = async () => {
       if (cartItems.length == 0) {
         setBooks(null); // Don't fetch if cart is empty

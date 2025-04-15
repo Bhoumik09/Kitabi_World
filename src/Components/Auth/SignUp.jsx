@@ -2,13 +2,13 @@
 import React, { useRef, useState } from "react";
 import axios from "axios";
 import { backend } from "../../App";
-import {Link, useNavigate} from 'react-router-dom'
-function SignUp({notificationFunc}){
+import { Link, useNavigate } from "react-router-dom";
+function SignUp({ notificationFunc }) {
   const usernameRef = useRef();
   const emailRef = useRef();
   const passwordRef = useRef();
-  const [button,setButtonState]=useState(false);
-  let navigate=useNavigate()
+  const [button, setButtonState] = useState(false);
+  let navigate = useNavigate();
   const handleSignUp = async (e) => {
     e.preventDefault();
     const username = usernameRef.current.value;
@@ -20,12 +20,12 @@ function SignUp({notificationFunc}){
       const response = await axios.post(
         `${backend}/auth/signup-user`,
         { username, email, password },
-        { withCredentials: true } // Send cookies with the request
+        { withCredentials: true }, // Send cookies with the request
       );
       if (response.status == 200) {
-        notificationFunc("SginIn Successfull")
+        notificationFunc("SginIn Successfull");
         console.log("User Sign In Successfull");
-        navigate('/login')
+        navigate("/login");
       } else {
         setButtonState(false);
         console.log("User SignUp Failed ");
@@ -101,7 +101,7 @@ function SignUp({notificationFunc}){
         </form>
         <p className="text-center">
           Already have an Account.{" "}
-          <Link to={'/login'} className="font-semibold text-green-700">
+          <Link to={"/login"} className="font-semibold text-green-700">
             Login
           </Link>
         </p>
